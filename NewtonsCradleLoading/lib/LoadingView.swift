@@ -19,7 +19,6 @@ class LoadingView: UIView {
     private func createBall(){
         let numberOfBalls: Int = 5
         let ballGap: CGFloat = (3.0 * CGFloat(numberOfBalls - 1))
-        print(self.bounds)
         print(self.frame)
         let ballSize = CGRectGetWidth(self.bounds) / ballGap
         

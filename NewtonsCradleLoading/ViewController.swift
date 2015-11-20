@@ -11,7 +11,7 @@ import Foundation
 
 class ViewController: UIViewController {
     
-    let loadingView = LoadingView()
+    @IBOutlet var loadingView: LoadingView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
