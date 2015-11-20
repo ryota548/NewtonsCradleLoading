@@ -12,11 +12,14 @@ import Foundation
 class ViewController: UIViewController {
     
     @IBOutlet var loadingView: LoadingView!
+    @IBOutlet var loadButton: UIButton!
+    var didAnimation: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        loadingView.setupBall()
+        //loadingView.ballColor = UIColor.redColor()
+        loadingView.applyBlur()
     }
 
     override func didReceiveMemoryWarning() {
@@ -24,6 +27,16 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    @IBAction func roadContents(){
+        if didAnimation == false{
+            loadingView.setupBall()
+            didAnimation = true
+        }else{
+            loadingView.stop()
+            didAnimation = false
+        }
+        print(didAnimation)
+    }
 
 }
 

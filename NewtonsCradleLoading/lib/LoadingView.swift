@@ -8,34 +8,47 @@
 
 import UIKit
 
-class LoadingView: UIView, UICollisionBehaviorDelegate {
+protocol Method{
+    func setupBall() -> Void
+    func stop() -> Void
+    func ballColor() -> Void
+    func ballSpead() -> Void
+    func applyBlur() -> Void
+}
+
+public class LoadingView: UIView, Method, UICollisionBehaviorDelegate {
     
     typealias BearingsArray = Array<BallView>
+    
     private var ballBearings: Array<BallView> = []
+    private var effectView : UIVisualEffectView!
     private var userDragBehavior : UIPushBehavior?
     lazy private var animator: UIDynamicAnimator = {
         return UIDynamicAnimator(referenceView: self)
         }()
     private var direction: Bool = false
     
-    func setupBall(){
+    public func setupBall(){
         createBall()
         applyDynamicBehaviors()
+        createUserPush()
+    }
+    public func stop(){
+        deleteView()
+    }
+    public func ballColor(){
+        //球の色の変える
+    }
+    public func ballSpead() {
+        //球の速度を変える
+    }
+    public func applyBlur() {
+        //ブラーの適用
+        effectView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.ExtraLight))
+        addSubview(effectView)
     }
     
-    private func createUserPush() {
-        direction = !direction
-        if  (direction) {
-            userDragBehavior = UIPushBehavior(items: [ballBearings.first!],
-                mode: UIPushBehaviorMode.Instantaneous)
-        } else {
-            userDragBehavior = UIPushBehavior(items: [ballBearings.last!],
-                mode: UIPushBehaviorMode.Instantaneous)
-        }
-        userDragBehavior!.pushDirection = CGVectorMake(-0.5, 0)
-        animator.addBehavior(userDragBehavior!)
-    }
-    
+    //球の生成
     private func createBall(){
         let numberOfBalls: Int = 5
         let ballGap: CGFloat = (3.0 * CGFloat(numberOfBalls - 1))
@@ -55,6 +68,7 @@ class LoadingView: UIView, UICollisionBehaviorDelegate {
         }
     }
     
+    //アニメーションの設定
     private func applyDynamicBehaviors() {
         let behavior = UIDynamicBehavior()
         for ballBearing in ballBearings {
@@ -66,60 +80,53 @@ class LoadingView: UIView, UICollisionBehaviorDelegate {
         behavior.addChildBehavior(createCollisionBehaviorForObjects(ballBearings))
         
         let itemBehavior = UIDynamicItemBehavior(items: ballBearings)
-        itemBehavior.elasticity = 1.4
+        itemBehavior.elasticity = 1.5
         itemBehavior.allowsRotation = false
-        itemBehavior.resistance = 4.0
+        itemBehavior.resistance = 5.0
         behavior.addChildBehavior(itemBehavior)
         
         animator = UIDynamicAnimator(referenceView: self)
-        animator.delegate = self
         animator.addBehavior(behavior)
     }
     
     // MARK - UIDynamicBehavior
     
-    func createCollisionBehaviorForObjects(objetcs: BearingsArray) -> UIDynamicBehavior {
+    private func createCollisionBehaviorForObjects(objetcs: BearingsArray) -> UIDynamicBehavior {
         let collision = UICollisionBehavior(items: objetcs)
         return collision
     }
     
-    func createGravityBehaviorForObjects(objects: BearingsArray) -> UIDynamicBehavior {
-        let gravity = UIGravityBehavior(items: [objects[0],objects[4]])
-         gravity.magnitude = 5
-        let first = UIGravityBehavior(items: [objects[1],objects[2],objects[3]])
-        first.magnitude = 5
-       
+    private func createGravityBehaviorForObjects(objects: BearingsArray) -> UIDynamicBehavior {
+        let gravity = UIGravityBehavior(items: objects)
+        gravity.magnitude = 8
         return gravity
     }
     
-    func createAttachmentBehaviorForBallBearing(bearing: BallView) -> UIDynamicBehavior {
+    private func createAttachmentBehaviorForBallBearing(bearing: BallView) -> UIDynamicBehavior {
         var anchor: CGPoint = bearing.center
         anchor.y -= CGRectGetHeight(bounds) / CGFloat(6.0);
-        
-        let blueBox = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
-        blueBox.backgroundColor = UIColor.greenColor()
-        blueBox.center = anchor
-        //addSubview(blueBox)
-        
+        let node = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+        node.center = anchor
         let behavior = UIAttachmentBehavior(item: bearing, attachedToAnchor: anchor)
         return behavior
     }
     
-    func collisionBehavior(behavior: UICollisionBehavior, endedContactForItem item1: UIDynamicItem, withItem item2: UIDynamicItem) {
-        print("\(item1) colided with \(item2) ")
+    //アニメーションの開始
+    private func createUserPush() {
+        direction = !direction
+        if  (direction) {
+            userDragBehavior = UIPushBehavior(items: [ballBearings.first!],
+                mode: UIPushBehaviorMode.Instantaneous)
+        } else {
+            userDragBehavior = UIPushBehavior(items: [ballBearings.last!],
+                mode: UIPushBehaviorMode.Instantaneous)
+        }
+        userDragBehavior!.pushDirection = CGVectorMake(-0.5, 0)
+        animator.addBehavior(userDragBehavior!)
     }
-    
-    func collisionBehavior(behavior: UICollisionBehavior, beganContactForItem item: UIDynamicItem, withBoundaryIdentifier identifier: NSCopying?, atPoint p: CGPoint){
-        print("\(item) colided at \(p) ")
-    }
-}
-extension LoadingView : UIDynamicAnimatorDelegate {
-    
-    func dynamicAnimatorDidPause(animator: UIDynamicAnimator) {
-        print("pause")
-        createUserPush()
-    }
-    func dynamicAnimatorWillResume(animator: UIDynamicAnimator) {
-        print("resume")
+
+    //Viewを削除
+    private func deleteView(){
+        self.hidden = true
     }
 }

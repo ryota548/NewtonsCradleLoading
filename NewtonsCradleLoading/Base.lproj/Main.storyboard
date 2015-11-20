@@ -21,6 +21,13 @@
                                 <rect key="frame" x="16" y="20" width="288" height="548"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X0X-Af-Xaj">
+                                <rect key="frame" x="137" y="269" width="45" height="30"/>
+                                <state key="normal" title="ロード"/>
+                                <connections>
+                                    <action selector="roadContents" destination="BYZ-38-t0r" eventType="touchUpInside" id="1L4-Cb-vlo"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -32,6 +39,7 @@
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
+                        <outlet property="loadButton" destination="X0X-Af-Xaj" id="PtU-za-pMU"/>
                         <outlet property="loadingView" destination="efh-p1-ahh" id="fqS-r1-y7H"/>
                     </connections>
                 </viewController>
