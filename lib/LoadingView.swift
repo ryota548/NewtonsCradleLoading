@@ -6,7 +6,6 @@
 //  Copyright © 2015年 ryota-ko. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 class LoadingView: UIView {
@@ -21,7 +20,8 @@ class LoadingView: UIView {
         let numberOfBalls: Int = 5
         let ballGap: CGFloat = (3.0 * CGFloat(numberOfBalls - 1))
         print(self.bounds)
-        let ballSize = CGRectGetWidth(self.frame) / ballGap
+        print(self.frame)
+        let ballSize = CGRectGetWidth(self.bounds) / ballGap
         
         for ballNo in 1...numberOfBalls {
             let ballFrame = CGRect(x: 0, y: 0, width: ballSize - 1, height: ballSize - 1)

@@ -6,8 +6,8 @@
 //  Copyright © 2015年 ryota-ko. All rights reserved.
 //
 
-import Foundation
 import UIKit
+import QuartzCore
 
 class BallView: UIView {
     
